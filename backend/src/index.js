@@ -4,24 +4,35 @@ require("dotenv").config() ;
 const cookieParser = require("cookie-parser") ;
 
 const main = require("./config/database") ; 
+const redisClient = require("./config/redis") ;
 const authRouter = require("./routes/Auth") ;
 
 app.use( express.json() ) ;
 app.use( cookieParser() ) ;
 
-app.use( "/auth" , authRouter ) ;
+app.use( "/user" , authRouter ) ;
 
 
 
 
 
-main()
-.then( ()=> {
-    console.log("MongoDb Connected .... " );
-    app.listen( process.env.PORT , ()=>{
-        console.log("App is listening at PORT : " + process.env.PORT ) ;
-    })
-}) 
-.catch( (err) => {
-    console.log("Err : " + err.message ) ;
-}) 
+
+
+
+const InitializeConnection = async ()=>{
+
+    try{
+
+        await Promise.all([ main() , redisClient.connect() ]) ;
+        console.log("DB connected ...... ") ;
+
+        app.listen( process.env.PORT , ()=>{
+            console.log("App listening at PORT : " + process.env.PORT ) ;
+        })
+    }
+    catch(err ){
+        console.log("Err : " + err.message ) ;
+    }
+}
+
+InitializeConnection() ;
