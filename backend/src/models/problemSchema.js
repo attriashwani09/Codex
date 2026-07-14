@@ -63,7 +63,19 @@ const problemSchema = new Schema({
             type : String , 
             required : true
         }
-    }] , 
+    }] ,  
+
+    referenceSolution : [{
+        language : {
+            type : String , 
+            required : true 
+        } , 
+        
+        completeCode : {
+            type : String , 
+            required : true
+        } 
+    }] ,
 
 
     problemCreator : {
