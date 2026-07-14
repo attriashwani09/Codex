@@ -6,11 +6,13 @@ const cookieParser = require("cookie-parser") ;
 const main = require("./config/database") ; 
 const redisClient = require("./config/redis") ;
 const authRouter = require("./routes/Auth") ;
+const problemRouter = require("./routes/problem") ;
 
 app.use( express.json() ) ;
 app.use( cookieParser() ) ;
 
 app.use( "/user" , authRouter ) ;
+app.use( "/problem" , problemRouter ) ;
 
 
 
