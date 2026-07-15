@@ -31,6 +31,7 @@ const createProblem = async( req , res ) => {
 
             const testResult = await submitToken( resultToken ) ;  // now , it will return us whole output , alongwith status_id 's and everything
              
+            console.log( testResult ) ;
              // checking if every testcase passed or not 
             for( const test of testResult ){
 
@@ -160,7 +161,7 @@ const getProblemById = async ( req , res ) => {
             return res.status(400).send("Id Field Missing");  
         } 
 
-        const requiredProblem = await problem.findById( id ) ;
+        const requiredProblem = await problem.findById( id ).select("title description difficulty tags visibleTestCases startCode ") ;
 
         if( !requiredProblem ){
             return res.status( 404 ).send("Problem Don't exist is Database ") ;
@@ -180,7 +181,7 @@ const getAllProblems = async( req , res ) => {
 
     try{
 
-        const allDsaProblems = await problem.find({}) ; 
+        const allDsaProblems = await problem.find({}).select("_id title difficulty tags") ; 
 
        
         if (allDsaProblems.length === 0) {
