@@ -3,25 +3,26 @@ const problem = require("../models/problemSchema");
 const problemRouter = express.Router() ;  
 
 const adminMiddleware = require("../middleware/adminMiddleware") ;
-const {createProblem } = require("../controllers/userProblem") ;
+const userMiddleware = require("../middleware/userMiddleware") ;
+const {createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems } = require("../controllers/userProblem") ;
 
 // 1). To add a problem
 problemRouter.post("/create" , adminMiddleware , createProblem ) ;
 
 // 2). To update a problem
-// problemRouter.patch("/:id" , adminMiddleware , updateProblem ) ;
+problemRouter.put("/update/:id" , adminMiddleware , updateProblem ) ;
 
 // 3). to delete a Problem
-// problemRouter.delete("/:id" , adminMiddleware , deleteProblem ) ;
+problemRouter.delete("/delete/:id" , adminMiddleware , deleteProblem ) ;
 
     // 4). to fetch one problem by its id
-// problemRouter.get("/:id" , getProblemById ) ;
+problemRouter.get("/problemById/:id" , userMiddleware , getProblemById ) ;
 
 // 5). to fetch all the possible problems 
-// problemRouter.get("/" , getAllProblems ) ;
+problemRouter.get("/getAllProblem" , userMiddleware ,  getAllProblems ) ;
 
 // 6). to fetch solved Problems only 
-// problemRouter.get("/user" , solvedProblem ) ; 
+// problemRouter.get("/ProblemSolvedByUser/user" , solvedProblem ) ; 
 
 
 

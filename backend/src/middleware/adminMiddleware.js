@@ -10,7 +10,7 @@ const adminMiddleware = async ( req , res , next ) =>{
     const { token } = req.cookies ;
 
     if (!token)
-        throw new Error("Authentication required");
+        throw new Error("Authentication required ( You are not a Admin )");
 
     const payload = jwt.verify( token , process.env.JWT_KEY ) ;
 
