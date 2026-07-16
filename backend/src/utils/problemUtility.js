@@ -20,7 +20,7 @@ const submitBatch = (submissions) => {
 
   const options = {
     method: "POST",
-    url: "https://ce.judge0.com/submissions/batch",
+    url: process.env.JUDGE0_URL ,
     params: {
       base64_encoded: "false",
       wait: "false",
@@ -65,7 +65,7 @@ const submitToken = async (resultToken) => {
 
     const options = {
         method: "GET",
-        url: "https://ce.judge0.com/submissions/batch",
+        url: process.env.JUDGE0_URL ,
 
         params: {
             tokens: resultToken.join(","),
