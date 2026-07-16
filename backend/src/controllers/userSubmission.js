@@ -54,31 +54,31 @@ const submitCode = async (req , res ) => {
 
         const testResult = await submitToken( resultToken ) ;
 
-        const testCasesPassed = 0 ;
-        const memory = 0 ;
-        const runtime = 0 ;
-        const errorMessage = "" ;
-        const status = "accepted" ;
+        let testCasesPassed = 0;
+        let memory = 0;
+        let runtime = 0;
+        let errorMessage = "";
+        let status = "accepted";
 
         for( const test of testResult ){
 
             if( test.status_id == 3 ){ 
                 testCasesPassed++ ;
                 memory = Math.max( memory , test.memory ) ;
-                runtime = runtime +  test.runtime ;
+                runtime = runtime +  parseFloat(test.time) ;
 
             } 
             else{ 
 
                 if( test.status_id == 4 ){
-                    status = "error" 
-                    errorMessage =  test.stderr
+                    status = "Wrong Answer" 
+                    errorMessage = test.status.description;
 
                 } 
                 else{ 
 
-                    status = "wrong" ,
-                    errorMessage = test.stderr
+                    status = "error" ,
+                    errorMessage = test.status.description;
 
                 }
 
