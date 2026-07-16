@@ -1,5 +1,7 @@
 const { getLanguageById , submitBatch , submitToken } = require("../utils/problemUtility") ;
 const problem = require("../models/problemSchema") ;
+const User = require("../models/userSchema") ;
+const { patch } = require("../routes/submit");
 
 
 
@@ -197,6 +199,30 @@ const getAllProblems = async( req , res ) => {
     catch( err ){
         res.status( 400 ).send("Err : " + err.message ) ;
     }
+} 
+
+
+// 6). getAllSolvedProblem 
+const getAllSolvedProblem = async ( req , res ) => {
+
+    try{ 
+
+        const userId = req.result._id ;
+ 
+        const user = await User.findById( userId ).populate( { 
+            path : "problemsSolved" ,
+            select : " _id title difficulity tags" 
+        }) ;
+
+        res.status( 200 ).send( user.problemsSolved ) ;
+
+
+
+    } 
+    catch( err ){
+        res.status( 400 ).send("Err : " + err.message ) ;
+    }
+
 }
 
 
@@ -204,4 +230,4 @@ const getAllProblems = async( req , res ) => {
 
 
 
-module.exports = { createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems } ;
+module.exports = { createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems , getAllSolvedProblem } ;

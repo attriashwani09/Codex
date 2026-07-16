@@ -44,8 +44,13 @@ const userSchema = new Schema({
     }  ,
 
     problemsSolved : {
-        type : Number , 
-        default : 0
+        type : [{
+            type : Schema.Types.ObjectId , 
+            ref : "problem"
+        }] , 
+        default : []
+        
+        // unique : true 
     }
 
 } , {timestamps : true }) ;

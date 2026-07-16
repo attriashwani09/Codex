@@ -4,7 +4,7 @@ const problemRouter = express.Router() ;
 
 const adminMiddleware = require("../middleware/adminMiddleware") ;
 const userMiddleware = require("../middleware/userMiddleware") ;
-const {createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems } = require("../controllers/userProblem") ;
+const {createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems , getAllSolvedProblem } = require("../controllers/userProblem") ;
 
 // 1). To add a problem
 problemRouter.post("/create" , adminMiddleware , createProblem ) ;
@@ -22,7 +22,7 @@ problemRouter.get("/problemById/:id" , userMiddleware , getProblemById ) ;
 problemRouter.get("/getAllProblem" , userMiddleware ,  getAllProblems ) ;
 
 // 6). to fetch solved Problems only 
-// problemRouter.get("/ProblemSolvedByUser/user" , solvedProblem ) ; 
+problemRouter.get("/ProblemSolvedByUser/user" , userMiddleware , getAllSolvedProblem ) ; 
 
 
 

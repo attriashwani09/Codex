@@ -2,6 +2,9 @@ const Submission = require("../models/submissionSchema");
 const problem = require("../models/problemSchema") ; 
 const { getLanguageById , submitBatch , submitToken } =require("../utils/problemUtility") ;
 
+
+
+// 1). When code is Submitted ........ 
 const submitCode = async (req , res ) => {
 
     try{
@@ -92,9 +95,75 @@ const submitCode = async (req , res ) => {
         submittedCode.errorMessage = errorMessage ;
         submittedCode.status = status ;
 
-        await submittedCode.save() ;
+        await submittedCode.save() ; 
+
+        // Add problemId into UserSolvedProblem (in userSchema ) only if it is not present there 
+
+        if( ! req.result.problemsSolved.includes( problemId ) ){
+            req.result.problemsSolved.push( problemId ) ;
+
+            await req.result.save() ;
+        } ;
 
         res.status( 201 ).send("submitted Result ") ;
+
+
+    }
+    catch( err ){
+        res.status( 500 ).send("Err : " + err.message ) ;
+    }
+
+
+}  
+
+
+
+// 2). For run Code 
+const runCode = async (req , res ) => {
+
+    try{
+
+        const userId = req.result._id ;
+
+        const problemId = req.params.id ;
+
+        const { code , language } = req.body ;
+
+        if( !userId || ! problemId || !code || !language ){
+            return res.status(400).send("Some Fields Missing . ") ;
+        }  
+
+
+        const requiredProblem = await problem.findById( problemId ) ;
+
+        if( !requiredProblem ){
+            return res.status( 400 ).send("Problem Not found ");
+        }
+
+
+        const { visibleTestCases } = requiredProblem ;
+        const languageId = getLanguageById( language ) ;
+
+        
+        const Judge0submission = visibleTestCases.map( (testcase) => {
+            return{
+                language_id : languageId , 
+                source_code : code , 
+                expected_output : testcase.output , 
+                stdin : testcase.input 
+            }
+        }) 
+
+
+        const submitResult = await submitBatch( Judge0submission ) ; 
+
+        const resultToken = submitResult.map( (value) => value.token ) ;
+
+        const testResult = await submitToken( resultToken ) ;
+
+        
+
+        res.status( 201 ).send( testResult ) ;
 
 
     }
@@ -109,7 +178,8 @@ const submitCode = async (req , res ) => {
 
 
 
-module.exports = { submitCode } ;
+
+module.exports = { runCode , submitCode } ;
 
 
 
