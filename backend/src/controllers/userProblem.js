@@ -1,7 +1,8 @@
 const { getLanguageById , submitBatch , submitToken } = require("../utils/problemUtility") ;
 const problem = require("../models/problemSchema") ;
 const User = require("../models/userSchema") ;
-const { patch } = require("../routes/submit");
+const { patch } = require("../routes/submit"); 
+const submission = require("../models/submissionSchema") ;
 
 
 
@@ -223,6 +224,31 @@ const getAllSolvedProblem = async ( req , res ) => {
         res.status( 400 ).send("Err : " + err.message ) ;
     }
 
+} 
+
+
+// 7). submittedProblem : it will give all the User's submission of any Problem 
+
+const submittedProblem = async ( req , res ) => { 
+
+    try{
+
+        const userId = req.result._id ;
+        const problemId = req.params.pid ;
+
+        const requiredSumbissions = await submission.find({ userId , problemId }) ;  
+
+        if( requiredSumbissions.length === 0 ){
+            return res.status(200).send("No submission exists for this Problem") ;
+        } 
+
+        res.status( 200 ).send( requiredSumbissions ) ;
+        
+    } 
+    catch( err ){
+        res.status( 500 ).send("Err : " + err.message ) ;
+    }
+
 }
 
 
@@ -230,4 +256,4 @@ const getAllSolvedProblem = async ( req , res ) => {
 
 
 
-module.exports = { createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems , getAllSolvedProblem } ;
+module.exports = { createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems , getAllSolvedProblem , submittedProblem } ;

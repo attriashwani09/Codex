@@ -53,7 +53,16 @@ const userSchema = new Schema({
         // unique : true 
     }
 
-} , {timestamps : true }) ;
+} , {timestamps : true }) ; 
+
+// when any user profile will get deleted , it will automatically delete all its submissions 
+userSchema.post("findOneAndDelete" , async function ( doc ) {
+
+    if( doc ){
+        await mongoose.model("submission").deleteMany({userId : doc._id }) ;
+    }
+    
+})
 
 
 const User = mongoose.model("user" , userSchema ) ;

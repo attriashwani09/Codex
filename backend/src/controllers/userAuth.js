@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt") ;
 const jwt = require("jsonwebtoken") ;
 const validate = require("../utils/validate") ;
 const redisClient = require("../config/redis");
+const Submission = require("../models/submissionSchema");
 
 
 const register = async (req, res) => {
@@ -109,9 +110,35 @@ const adminRegister = async (req, res) => {
   catch (err) {
     res.status(400).send("Err: " + err.message);
   }
-};
+}; 
+
+
+
+// 5). To delete a user Profile 
+const deleteProfile = async ( req , res ) => {
+
+  try{ 
+
+    const userId = req.result._id ;
+
+    await User.findByIdAndDelete( userId ) ;
+
+
+    // also delete all the sumbissions related to that Id 
+
+    // await Submission.deleteMany({userId}) ;  
+
+    // instead of this , we can also create a post function for deletesubssion for user , after its profile deletion is done , That post function will automatically delete its all submissionns .
+
+    res.status( 200 ).send("Profile Deleted Successfully") ;
+
+  } 
+  catch( err ){
+    res.status( 500 ).send("Err : " + err.message ) ;
+  }
+}
 
 
 
 
-module.exports = { register , login , logout , adminRegister } ;
+module.exports = { register , login , logout , adminRegister , deleteProfile} ;

@@ -64,7 +64,13 @@ const submissionSchema = new Schema({
         default: 0
     }
 
-}, { timestamps: true });
+}, { timestamps: true }); 
+
+
+
+// this will create a compound index of userId and problemId and will help fetch submissions in log(n) time .
+// here 1 means ascending order , ( to make it in descending order use -1 ) .
+submissionSchema.index({ userId : 1 , problemId : 1}) ; 
 
 
 const Submission = mongoose.model("submission" , submissionSchema ) ; 

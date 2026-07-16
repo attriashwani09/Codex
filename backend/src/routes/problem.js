@@ -4,7 +4,8 @@ const problemRouter = express.Router() ;
 
 const adminMiddleware = require("../middleware/adminMiddleware") ;
 const userMiddleware = require("../middleware/userMiddleware") ;
-const {createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems , getAllSolvedProblem } = require("../controllers/userProblem") ;
+const {createProblem , updateProblem , deleteProblem , getProblemById , getAllProblems , getAllSolvedProblem , submittedProblem } = require("../controllers/userProblem") ;
+const { submitBatch } = require("../utils/problemUtility");
 
 // 1). To add a problem
 problemRouter.post("/create" , adminMiddleware , createProblem ) ;
@@ -22,7 +23,13 @@ problemRouter.get("/problemById/:id" , userMiddleware , getProblemById ) ;
 problemRouter.get("/getAllProblem" , userMiddleware ,  getAllProblems ) ;
 
 // 6). to fetch solved Problems only 
-problemRouter.get("/ProblemSolvedByUser/user" , userMiddleware , getAllSolvedProblem ) ; 
+problemRouter.get("/ProblemSolvedByUser/user" , userMiddleware , getAllSolvedProblem ) ;  
+
+
+// 7). submittedProblem : this will fetch all the submissions of a given problem that any user posted   ( pid : problemId)
+problemRouter.get("/submittedProblem/:pid" , userMiddleware , submittedProblem ) ;
+
+
 
 
 
