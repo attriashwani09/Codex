@@ -1,5 +1,4 @@
-import { useState } from "react"; 
-import { register} from "react"
+import {useForm } from "react-hook-form" ;
 
 function SignUp(){
 
@@ -8,9 +7,9 @@ function SignUp(){
     return(
         <>
         <form onSubmit={ handleSubmit( (data) => console.log( data )) }  className = "flex flex-col justify-center items-center bg-amber-400" > 
-            <input  {...register('firstName')}  placeholder="Enter Your name "></input> 
-            <input  {...register('email')}  placeholder="Enter your Email Id"  ></input>
-            <input  {...register('password')}   placeholder="Password" ></input> 
+            <input   {...register('firstName')}  placeholder="Enter Your name "></input> 
+            <input type="email"  {...register('email')}  placeholder="Enter your Email Id"  ></input>
+            <input type="password"  {...register('password')}   placeholder="Password" ></input> 
 
             <button type="submit"  className="btn">SignUp</button>
         </form>
