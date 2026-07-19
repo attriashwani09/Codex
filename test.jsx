@@ -1,9 +1,6 @@
-import { useForm } from "react-hook-form" ;
-import {Link} from "react-router"
-
-import { zodResolver } from "@hookform/resolvers/zod" ;
-
-import { email, z } from "zod" ;
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const signupSchema = z.object({
   firstName: z.string().min(3, "Name should contain at least 3 characters"),
@@ -13,9 +10,14 @@ const signupSchema = z.object({
     ),
 });
 
-
 function SignUp() {
-  const { register, handleSubmit, formState: { errors },} = useForm({ resolver: zodResolver(signupSchema), });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+  });
 
   function onSubmit(data) {
     console.log(data);
@@ -77,70 +79,14 @@ function SignUp() {
 
           <p className="text-center mt-4 text-sm">
             Already have an account?
-            <Link to = "/login"  className="link link-primary font-semibold">
+            <span className="text-primary cursor-pointer ml-1 hover:underline">
               Login
-            </Link>
+            </span>
           </p>
         </div>
       </div>
     </div>
   );
-} 
+}
 
-
-
-export default SignUp ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// # with React Form : 
-
-// import {useForm } from "react-hook-form" ; 
-
-// import {zodResolver } from "@hookform/resolvers/zod" ;
-
-// import { email, z } from "zod" ; 
-
-// const signupSchema = z.object({
-//     firstName : z.string().min( 3 , "Name should contain atleast 3 char") ,
-//     emailId : z.string().email("Please enter a valid Email  ") ,
-//     password : z.string().min( 8 , "Please chose a strong Password") 
-// })
-
-// function SignUp(){
-
-//     const { register,  handleSubmit,  formState: { errors }, } = useForm({ resolver : zodResolver( signupSchema )}); 
-
-//     return(
-//         <>
-//         <form onSubmit={ handleSubmit }  className = "flex flex-col justify-center items-center bg-amber-400" > 
-//             <input   {...register('firstName')}  placeholder="Enter Your name "></input> 
-//             { errors.firstName && (<span>{errors.firstName.message}</span>)} 
-//             <input type="email"  {...register('emailId')}  placeholder="Enter your Email Id"  ></input>
-//             {errors.emailId && <span>{errors.emailId.message}</span>}
-//             <input type="password"  {...register('password')}   placeholder="Password" ></input> 
-//             {errors.password && <span>{errors.password.message}</span>}
-//             <button type="submit"  className="btn">SignUp</button>
-//         </form>
-//         </>
-//     )
-// }
-
-
-
-
-// export default SignUp ; 
+export default SignUp;
