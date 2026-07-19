@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form" ;
-import {Link} from "react-router"
+import {Link} from "react-router-dom"
 
 import { zodResolver } from "@hookform/resolvers/zod" ;
 
@@ -72,11 +72,11 @@ function SignUp() {
             </div>
 
             {/* Button */}
-            <button className="btn btn-primary w-full mt-4">Sign Up</button>
+            <button type="submit" className="btn btn-primary w-full mt-4">Sign Up</button>
           </form>
 
           <p className="text-center mt-4 text-sm">
-            Already have an account?
+            Already have an account? {" "}
             <Link to = "/login"  className="link link-primary font-semibold">
               Login
             </Link>

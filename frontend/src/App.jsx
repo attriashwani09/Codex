@@ -8,7 +8,7 @@ import HomePage from './Pages/HomePage'
 
 
 
-import {BrowserRouter, Route, Routes} from "react-router" ;
+import {BrowserRouter, Route, Routes} from "react-router-dom" ;
 
 
 function App(){
