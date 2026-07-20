@@ -1,92 +1,150 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axiosClient from "./utils/axiosClient";
 
-const signupSchema = z.object({
-  firstName: z.string().min(3, "Name should contain at least 3 characters"),
-  emailId: z.string().email("Please enter a valid email"),
-  password: z.string().regex( /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character."
-    ),
+// Register User
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post("/user/register", userData);
+      return response.data.user;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// Login User
+export const loginUser = createAsyncThunk(
+  "auth/login",
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const response = await axiosClient.post("/user/login", credentials);
+      return response.data.user;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// Check Authentication
+export const checkAuth = createAsyncThunk(
+  "auth/check",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosClient.get("/user/check");
+      return data.user;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// Logout User
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await axiosClient.post("/user/logout");
+      return null;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+const authSlice = createSlice({
+  name: "auth",
+
+  initialState: {
+    user: null,
+    isAuthenticated: false,
+    loading: false,
+    error: null,
+  },
+
+  reducers: {},
+
+  extraReducers: (builder) => {
+    builder
+
+      // Register User Cases
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = !!action.payload;
+        state.user = action.payload;
+      })
+
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Something went wrong";
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+
+      // Login User Cases
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = !!action.payload;
+        state.user = action.payload;
+      })
+
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Something went wrong";
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+
+      // Check Auth Cases
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = !!action.payload;
+        state.user = action.payload;
+      })
+
+      .addCase(checkAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Something went wrong";
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+
+      // Logout User Cases
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = null;
+      })
+
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Something went wrong";
+        state.isAuthenticated = false;
+        state.user = null;
+      });
+  },
 });
 
-function SignUp() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(signupSchema),
-  });
-
-  function onSubmit(data) {
-    console.log(data);
-  }
-
-  return (
-    <div className="min-h-screen flex justify-center items-center bg-base-200">
-      <div className="card w-full max-w-md bg-base-100 shadow-2xl">
-        <div className="card-body">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-extrabold text-primary tracking-wide">
-              CODEXA
-            </h1>
-
-            <p className="text-base-content/70 mt-2">
-              Master Data Structures & Algorithms
-            </p>
-
-            <h2 className="text-2xl font-bold mt-6">Create Your Account</h2>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Name */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Full Name</span>
-              </label>
-
-              <input {...register("firstName")}  type="text"  placeholder="Enter your name"  className="input input-bordered w-full" />
-
-                {errors.firstName && ( <p className="text-error text-sm mt-1"> {errors.firstName.message} </p> )}
-            </div>
-
-            {/* Email */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Email</span>
-              </label>
-
-              <input {...register("emailId")}  type="email"  placeholder="Enter your email"  className="input input-bordered w-full"  />
-
-              {errors.emailId && ( <p className="text-error text-sm mt-1"> {errors.emailId.message}  </p>  )}
-            </div>
-
-            {/* Password */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-
-              <input {...register("password")}  type="password"  placeholder="Enter password"  className="input input-bordered w-full" />
-
-              {errors.password && ( <p className="text-error text-sm mt-1"> {errors.password.message} </p> )}
-            </div>
-
-            {/* Button */}
-            <button className="btn btn-primary w-full mt-4">Sign Up</button>
-          </form>
-
-          <p className="text-center mt-4 text-sm">
-            Already have an account?
-            <span className="text-primary cursor-pointer ml-1 hover:underline">
-              Login
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default SignUp;
+export default authSlice.reducer;

@@ -22,7 +22,20 @@ const register = async (req, res) => {
 
     res.cookie("token", token, { maxAge: 3600 * 1000 }); // Here we multiplied by 1000 because maxAge uses milisecond value
 
-    res.status(201).send("User created successfully ");
+    // send reply to user : { _id , emailId , firstName} 
+
+    const reply = {
+      _id : user._id , 
+      firstName : user.firstName , 
+      emailId : user.emailId
+    }
+
+    res.status(201).json( { 
+      user : reply , 
+      message : "User created successfully " 
+    }); 
+
+
   } 
   catch (err) {
     res.status(400).send("Err: " + err.message);
@@ -56,8 +69,20 @@ const login = async (req, res) => {
     const token = jwt.sign( { _id: user._id, emailId: user.emailId , role : user.role }, process.env.JWT_KEY, { expiresIn: 3600 } );
 
     res.cookie("token", token, { maxAge: 3600 * 1000 });
+  
+    // send reply to user : { _id , emailId , firstName} 
+    const reply = {
+      _id : user._id , 
+      firstName : user.firstName , 
+      emailId : user.emailId
+    }
 
-    res.status(200).send("Login Succesfully " + user.firstName);
+    res.status(200).json( { 
+      user : reply , 
+      message : "User created successfully " 
+    }); 
+
+    
   } 
   catch (err) {
     res.status(400).send("Err: " + err.message);
@@ -136,9 +161,26 @@ const deleteProfile = async ( req , res ) => {
   catch( err ){
     res.status( 500 ).send("Err : " + err.message ) ;
   }
+} 
+
+
+// 6). CheckUser : It helps to authenticate the user , when try to relogin with same cookie 
+const checkUser = ( req , res ) => {
+
+  const reply = {
+    _id : req.result._id , 
+    firstName : req.result.firstName , 
+    emailId : req.result.emailId
+  } 
+
+  res.status( 200 ).json({
+    user : reply , 
+    message : "Valid User"
+  })
+
 }
 
 
 
 
-module.exports = { register , login , logout , adminRegister , deleteProfile} ;
+module.exports = { register , login , logout , adminRegister , deleteProfile , checkUser } ;

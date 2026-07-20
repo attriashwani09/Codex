@@ -20,7 +20,7 @@ const userSchema = new Schema({
         type : Number , 
         min : 8 , 
         max : 80 , 
-        required : true 
+        // required : true 
     } , 
 
     emailId : {
