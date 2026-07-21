@@ -7,8 +7,9 @@ import Login from './Pages/Login'
 import SignUp from './Pages/SignUp'
 import HomePage from './Pages/HomePage'
 
-import {BrowserRouter, Route, Routes} from "react-router-dom" ; 
-import { checkAuth } from './store/authSlice'
+import {BrowserRouter, Route, Routes , Navigate } from "react-router-dom" ; 
+import { checkAuth } from './store/authSlice' 
+
 
 
 function App(){ 
@@ -30,11 +31,11 @@ function App(){
       <BrowserRouter>
         <Routes>
 
-          <Route path='/' element = {<HomePage/>} ></Route>
+          <Route path='/' element = { isAuthenticated ? <HomePage/> : <Login/> } ></Route>
 
-          <Route path='/login' element = {<Login/>} ></Route> 
+          <Route path='/login' element = { isAuthenticated ? <Navigate to = "/" /> : <Login/>} ></Route> 
 
-          <Route path='/signup'  element = {<SignUp/>} ></Route>
+          <Route path='/signup'  element = {  isAuthenticated ? <Navigate to = "/" /> :<SignUp/>} ></Route>
 
         </Routes>
       </BrowserRouter>

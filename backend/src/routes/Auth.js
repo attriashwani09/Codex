@@ -10,7 +10,7 @@ authRouter.post("/login" , login ) ;
 authRouter.post("/logout" ,  userMiddleware , logout) ;
 authRouter.post("/adminRegister" , adminMiddleware , adminRegister ) ;
 authRouter.delete("/deleteProfile" , userMiddleware , deleteProfile ) ;
-authRouter.get("/ckeck" , userMiddleware , checkUser ) ;
+authRouter.get("/check" , userMiddleware , checkUser ) ;
 // authRouter.get("/getProfile" , getProfile ) ;
 
 

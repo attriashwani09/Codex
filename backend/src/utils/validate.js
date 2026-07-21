@@ -2,9 +2,9 @@ const validator = require("validator") ;
 
 const validate = ( data ) => { 
 
-    const { firstName , emailId , password , age } = data ;
+    const { firstName , emailId , password } = data ;
 
-    const mandatoryFields = ["firstName", "emailId", "password", "age"];
+    const mandatoryFields = ["firstName", "emailId", "password" ];
 
     const isAllowed = mandatoryFields.every( ( field ) =>  Object.keys( data ).includes( field )  );
 

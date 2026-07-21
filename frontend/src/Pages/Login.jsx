@@ -1,9 +1,12 @@
 import { useForm } from "react-hook-form" ;
-import {Link} from "react-router-dom"
+import {Link , useNavigate } from "react-router-dom"
 
 import { zodResolver } from "@hookform/resolvers/zod" ;
 
 import {  z } from "zod" ;
+import { useEffect } from "react";
+import { loginUser } from "../store/authSlice"; 
+import{ useDispatch , useSelector } from "react-redux" ;
 
 const loginSchema = z.object({
   emailId: z.string().email("Please enter a valid email"),
@@ -11,11 +14,22 @@ const loginSchema = z.object({
 });
 
 
-function Login() {
-  const { register, handleSubmit, formState: { errors },} = useForm({ resolver: zodResolver( loginSchema ), });
+function Login() { 
+
+  const dispatch = useDispatch() ;
+  const navigate = useNavigate() ;
+  const { isAuthenticated , loading , error } = useSelector( (state) => state.auth ) ;
+
+  const { register, handleSubmit, formState: { errors },} = useForm({ resolver: zodResolver( loginSchema ), }); 
+
+  useEffect( ()=>{
+    if( isAuthenticated ){
+      navigate("/") ;
+    }
+  })
 
   function onSubmit(data) {
-    console.log(data);
+    dispatch( loginUser(data)) ;
   }
 
   return (
