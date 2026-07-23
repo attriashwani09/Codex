@@ -15,7 +15,7 @@ import { checkAuth } from './store/authSlice'
 function App(){ 
 
   // Get authentication status from Redux store
-  const {isAuthenticated} = useSelector( (state) => state.auth ) ;
+  const {isAuthenticated , loading } = useSelector( (state) => state.auth ) ;
 
   const dispatch = useDispatch() ;
 
